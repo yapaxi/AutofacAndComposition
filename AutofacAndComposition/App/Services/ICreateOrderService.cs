@@ -1,5 +1,4 @@
 ﻿using AutofacAndComposition.App.Client;
-using AutofacAndComposition.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

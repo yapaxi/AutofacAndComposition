@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using AutofacAndComposition.App.Configuration;
 using AutofacAndComposition.App.Repositories;
+using AutofacAndComposition.App.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

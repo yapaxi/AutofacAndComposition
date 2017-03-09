@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutofacAndComposition.App.Configuration
+namespace AutofacAndComposition.App.Services
 {
     public class VendorConfigurationService
     {

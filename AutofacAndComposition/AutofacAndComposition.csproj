@@ -60,13 +60,13 @@
     <Compile Include="App\Client\AmazonClient.cs" />
     <Compile Include="App\Client\IClient.cs" />
     <Compile Include="App\Client\OrderRequest.cs" />
-    <Compile Include="App\Configuration\VendorConfigurationContainer.cs" />
+    <Compile Include="App\Services\ICreateOrderService.cs" />
+    <Compile Include="App\Services\VendorConfigurationService.cs" />
     <Compile Include="App\DomainModel\Credential.cs" />
     <Compile Include="App\DomainModel\Order.cs" />
     <Compile Include="App\Repositories\ConfigurationRepository.cs" />
     <Compile Include="App\Repositories\OrderRepository.cs" />
     <Compile Include="App\Services\CreateOrderService.cs" />
-    <Compile Include="App\Services\ICreateOrderService.cs" />
     <Compile Include="App\Workflows\CreateOrderWorkflow.cs" />
     <Compile Include="AutofacModules\DataAccessModule.cs" />
     <Compile Include="Model\VendorConfiguration.cs" />

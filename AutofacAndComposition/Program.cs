@@ -14,7 +14,6 @@ using AutofacAndComposition.Quartz;
 using Quartz.Impl;
 using System.Diagnostics;
 using Quartz.Spi;
-using AutofacAndComposition.App.Configuration;
 using AutofacAndComposition.App.DomainModel;
 
 namespace AutofacAndComposition
