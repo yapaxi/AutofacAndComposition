@@ -15,6 +15,7 @@ using Quartz.Impl;
 using System.Diagnostics;
 using Quartz.Spi;
 using AutofacAndComposition.App.DomainModel;
+using static AutofacAndComposition.Tools;
 
 namespace AutofacAndComposition
 {
@@ -33,7 +34,7 @@ namespace AutofacAndComposition
             using (var rootScope = container.BeginLifetimeScope("New Root"))
             {
                 var scheduler = new StdSchedulerFactory().GetScheduler();
-                scheduler.JobFactory = new QuartzJobFactory(rootScope);
+                scheduler.JobFactory = new LifetimeScopeJobFactory(rootScope);
                 scheduler.Start();
 
                 ScheduleVendor<Amazon>(scheduler, rootScope);
@@ -97,98 +98,8 @@ namespace AutofacAndComposition
                 .Build();
 
             scheduler.ScheduleJob(job, trigger);
-        }
 
-        private static string GetWorkflowName(Type type)
-        {
-            return type.IsGenericType ? FriendlyTypeName(type.GetGenericArguments()[0]) : throw new InvalidOperationException();
-        }
-
-        private static string FriendlyTypeName(Type t)
-        {
-            if (t.IsGenericTypeDefinition)
-                throw new InvalidOperationException();
-
-            if (!t.IsGenericType)
-            {
-                return t.Name;
-            }
-            var b = new StringBuilder();
-            b.Append(t.Name).Append("[");
-            foreach (var v in t.GetGenericArguments())
-            {
-                var name = FriendlyTypeName(v);
-                b.Append(name).Append(", ");
-            }
-            b.Length -= 2;
-            b.Append("]");
-            return b.ToString();
-        }
-    }
-
-    public class QuartzJobFactory : IJobFactory
-    {
-        private readonly ILifetimeScope _container;
-        private readonly Dictionary<IJob, ILifetimeScope> _scopes;
-        private readonly object _lock;
-
-        public QuartzJobFactory(ILifetimeScope container)
-        {
-            _lock = new object();
-            _scopes = new Dictionary<IJob, ILifetimeScope>();
-            _container = container ?? throw new ArgumentNullException(nameof(container));
-        }
-
-        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
-        {
-            IJob job = null;
-            ILifetimeScope scope = null;
-            try
-            {
-                if (bundle == null)
-                {
-                    throw new ArgumentNullException(nameof(bundle));
-                }
-
-                var config = (VendorConfiguration)bundle.JobDetail.JobDataMap["Config"];
-                scope = _container.BeginLifetimeScope(builder => 
-                {
-                    builder.RegisterInstance(config.Venue).As<Venue>().SingleInstance();
-                    builder.RegisterInstance(config.Credential).As<Credential>().SingleInstance();
-                });
-
-                job = (IJob)scope.Resolve(bundle.JobDetail.JobType);
-
-                lock (_lock)
-                {
-                    _scopes.Add(job, scope);
-                }
-
-                return job;
-            }
-            catch
-            {
-                scope?.Dispose();
-
-                if (job != null)
-                {
-                    lock (_lock)
-                    {
-                        _scopes.Remove(job);
-                    }
-                }
-                
-                throw;
-            }
-        }
-
-        public void ReturnJob(IJob job)
-        {
-            lock (_lock)
-            {
-                _scopes[job].Dispose();
-                _scopes.Remove(job);
-            }
+            //job resolving is in Quartz\LifetimeScopeJobFactory.cs
         }
     }
 }
