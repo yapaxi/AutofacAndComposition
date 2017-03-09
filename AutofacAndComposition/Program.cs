@@ -30,12 +30,12 @@ namespace AutofacAndComposition
 
             var container = builder.Build();
 
-            using (var configScope = container.BeginLifetimeScope())
+            using (var rootScope = container.BeginLifetimeScope("New Root"))
             {
                 var scheduler = new StdSchedulerFactory().GetScheduler();
-                scheduler.JobFactory = new QuartzJobFactory(configScope);
+                scheduler.JobFactory = new QuartzJobFactory(rootScope);
 
-                ScheduleVendor<Amazon>(scheduler, configScope);
+                ScheduleVendor<Amazon>(scheduler, rootScope);
 
                 scheduler.Start();
                 Console.WriteLine("All done. Running.");
@@ -47,7 +47,7 @@ namespace AutofacAndComposition
             where TVendor : Vendor
         {
             var vendorName = typeof(TVendor).Name;
-            var scopeDependencyContainer = scope.Resolve<VendorConfigurationContainer>();
+            var vendorConfigurationService = scope.Resolve<VendorConfigurationService>();
 
             Console.WriteLine($"[{vendorName}] Configuration started");
             
@@ -55,29 +55,34 @@ namespace AutofacAndComposition
             {
                 Console.WriteLine($"[{vendorName}] Configuring job {jobConfig.JobType.Name}");
 
-                var configurations = scopeDependencyContainer.Resolve<TVendor>();
+                var configurations = vendorConfigurationService.GetConfigurations<TVendor>();
 
                 foreach (var configuration in configurations)
                 {
                     Console.WriteLine($"[{vendorName}] Configuring job {jobConfig.JobType.Name} venue instance: id={configuration.Venue.Id};credential={configuration.Credential.Token}");
 
-                    IDictionary<string, object> dict = new Dictionary<string, object>() { { "Config", configuration } };
-
-                    var job = JobBuilder
-                        .Create(jobConfig.JobType)
-                        .SetJobData(new JobDataMap(dict))
-                        .Build();
-
-                    var trigger = TriggerBuilder.Create()
-                        .StartNow()
-                        .WithSimpleSchedule(schedule => schedule
-                            .WithIntervalInSeconds(5)
-                            .RepeatForever())
-                        .Build();
-
-                    scheduler.ScheduleJob(job, trigger);
+                    ScheduleJob(scheduler, jobConfig, configuration);
                 }
             }
+        }
+
+        private static void ScheduleJob(IScheduler scheduler, WorkflowJobConfig jobConfig, VendorConfiguration configuration)
+        {
+            IDictionary<string, object> dict = new Dictionary<string, object>() { { "Config", configuration } };
+
+            var job = JobBuilder
+                .Create(jobConfig.JobType)
+                .SetJobData(new JobDataMap(dict))
+                .Build();
+
+            var trigger = TriggerBuilder.Create()
+                .StartNow()
+                .WithSimpleSchedule(schedule => schedule
+                    .WithIntervalInSeconds(5)
+                    .RepeatForever())
+                .Build();
+
+            scheduler.ScheduleJob(job, trigger);
         }
     }
 

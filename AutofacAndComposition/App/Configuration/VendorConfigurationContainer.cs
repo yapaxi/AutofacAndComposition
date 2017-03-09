@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.App.Configuration
 {
-    public class VendorConfigurationContainer
+    public class VendorConfigurationService
     {
         private readonly ConfigurationRepository _repository;
 
-        public VendorConfigurationContainer(ConfigurationRepository repository)
+        public VendorConfigurationService(ConfigurationRepository repository)
         {
             _repository = repository;
         }
 
-        public VendorConfiguration[] Resolve<TVendor>()
+        public VendorConfiguration[] GetConfigurations<TVendor>()
             where TVendor : Vendor
         {
             var vendorCode = typeof(TVendor).Name; 
