@@ -17,9 +17,8 @@ namespace AutofacAndComposition
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-
-
-            builder.RegisterModule(new AmazonModuleTemplate(deps));
+            
+            builder.RegisterModule(new AmazonModuleTemplate());
 
             var container = builder.Build();
 

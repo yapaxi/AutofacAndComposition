@@ -14,6 +14,7 @@ namespace AutofacAndComposition.Modules
     {
         private readonly (Amazon venue, Token token)[] _nonBehavioralDependecies = new (Amazon, Token)[]
         {
+                (new AmazonX(), new Token("a1")),
                 (new AmazonX(), new Token("a2")),
                 (new AmazonY(), new Token("b"))
         };
