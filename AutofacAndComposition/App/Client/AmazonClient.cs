@@ -24,21 +24,21 @@ namespace AutofacAndComposition.App.Client
                 case Amazon.USASellingVenueId:
                     return new[]
                     {
-                        new OrderRequest() { VenueOrderId = "1"  },
-                        new OrderRequest() { VenueOrderId = "2"   },
-                        new OrderRequest() { VenueOrderId = "3"   },
-                        new OrderRequest() { VenueOrderId = "4"   },
-                        new OrderRequest() { VenueOrderId = "5"   },
-                        new OrderRequest() { VenueOrderId = "6"   },
-                        new OrderRequest() { VenueOrderId = "7"   },
+                        new OrderRequest() { VenueOrderId = "1" },
+                        new OrderRequest() { VenueOrderId = "2" },
+                        new OrderRequest() { VenueOrderId = "3" },
+                        new OrderRequest() { VenueOrderId = "4" },
+                        new OrderRequest() { VenueOrderId = "5" },
+                        new OrderRequest() { VenueOrderId = "6" },
+                        new OrderRequest() { VenueOrderId = "7" },
                     };
                 case Amazon.CanadaSellingVenueId:
                     return new[]
                     {
-                        new OrderRequest() { VenueOrderId = "1"   },
-                        new OrderRequest() { VenueOrderId = "2"   },
-                        new OrderRequest() { VenueOrderId = "3"   },
-                        new OrderRequest() { VenueOrderId = "4"   },
+                        new OrderRequest() { VenueOrderId = "1" },
+                        new OrderRequest() { VenueOrderId = "2" },
+                        new OrderRequest() { VenueOrderId = "3" },
+                        new OrderRequest() { VenueOrderId = "4" },
                     };
             }
 

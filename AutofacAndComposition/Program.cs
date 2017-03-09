@@ -125,7 +125,7 @@ namespace AutofacAndComposition
 
                 return job;
             }
-            catch (Exception ex)
+            catch
             {
                 scope?.Dispose();
 

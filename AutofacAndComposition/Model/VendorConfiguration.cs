@@ -18,16 +18,5 @@ namespace AutofacAndComposition.Model
             Venue = venue;
             Credential = credential;
         }
-
-        public (string name, object instance, Type type)[] Flatten()
-        {
-            IEnumerable<(string name, object instance, Type type)> func()
-            {
-                yield return (nameof(Credential), Credential, typeof(Credential));
-                yield return (nameof(Venue), Venue, typeof(Venue));
-            }
-
-            return func().ToArray();
-        }
     }
 }
