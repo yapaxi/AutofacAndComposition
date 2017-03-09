@@ -20,14 +20,18 @@ namespace AutofacAndComposition.AutofacModules
                                                     CreateOrderService>>));
 
         private VenueWorkflowJobConfig R1CreateOrderJobUSA
-            => new VenueWorkflowJobConfig(new Venue(Amazon.USASellingVenueId), typeof(WorkflowJob<
-                                                R1CreateOrderWorkflow<
-                                                    R1CreateOrderServiceUSA>>));
+            => new VenueWorkflowJobConfig(
+                venue: new Venue(Amazon.USASellingVenueId),
+                jobType: typeof(WorkflowJob<
+                                    R1CreateOrderWorkflow<
+                                        R1CreateOrderServiceUSA>>));
 
         private VenueWorkflowJobConfig R1CreateOrderJobCanada
-            => new VenueWorkflowJobConfig(new Venue(Amazon.CanadaSellingVenueId), typeof(WorkflowJob<
-                                                R1CreateOrderWorkflow<
-                                                    R1CreateOrderServiceCanada>>));
+            => new VenueWorkflowJobConfig(
+                venue: new Venue(Amazon.CanadaSellingVenueId),
+                jobType: typeof(WorkflowJob<
+                                    R1CreateOrderWorkflow<
+                                        R1CreateOrderServiceCanada>>));
 
         protected override void Load(ContainerBuilder builder)
         {
