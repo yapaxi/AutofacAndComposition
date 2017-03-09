@@ -18,56 +18,25 @@ namespace AutofacAndComposition
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterModule(new AmazonModuleTemplate());
+
+            builder.RegisterModule(new AmazonModuleTemplate(deps));
 
             var container = builder.Build();
 
-            foreach (var amazon in new Amazon[] { new AmazonX(), new AmazonY() })
+            foreach (var nbd in container.Resolve<IEnumerable<ScopeDependency>>())
             {
-                foreach (var token in new[] { new Token("a"), new Token("b") })
+                using (var scope = container.BeginLifetimeScope((scopeBuilder) =>
                 {
-                    using (var scope = container.BeginLifetimeScope((scopeBuilder) =>
+                    foreach (var d in nbd.Deps)
                     {
-                        scopeBuilder.RegisterInstance(token);
-                        scopeBuilder.RegisterInstance(amazon);
-                    }))
-                    {
-                        var createOrderService = scope.Resolve<ICreateOrderService<Amazon>>();
-                        createOrderService.CreateOrders();
+                        scopeBuilder.RegisterInstance(d.instance).As(d.type);
                     }
+                }))
+                {
+                    var createOrderService = scope.Resolve<ICreateOrderService<Amazon>>();
+                    createOrderService.CreateOrders();
                 }
             }
         }
-
-
     }
-
-    //public class RootModule<TVenue>: Module
-    //    where TVenue : Amazon
-    //{
-    //    protected override void Load(ContainerBuilder builder)
-    //    {
-    //        builder.RegisterType<OrderService<TVenue, AmazonClient>>().As<ICreateOrderService<TVenue>>();
-    //        builder.RegisterType<AmazonClient>();
-    //        base.Load(builder);
-    //    }
-    //}
-
-    //public class OrderService<TVenue, TClient> : ICreateOrderService<TVenue>
-    //    where TVenue : Venue
-    //    where TClient : IClient
-    //{
-    //    private TClient _client;
-
-    //    public OrderService(TClient client)
-    //    {
-    //        _client = client;
-    //    }
-
-    //    public void CreateOrders()
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
 }

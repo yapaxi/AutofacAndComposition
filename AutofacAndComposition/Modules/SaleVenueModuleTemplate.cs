@@ -16,13 +16,12 @@ namespace AutofacAndComposition.Modules
         public Type VenueType { get; } = typeof(TVenue);
         
         protected abstract Type CreateOrderService { get; }
-
+        
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType(CreateOrderService).As<ICreateOrderService<TVenue>>();
             builder.RegisterType<TVenue>();
             base.Load(builder);
-
         }
     }
 }
