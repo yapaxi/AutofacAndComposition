@@ -1,4 +1,5 @@
-﻿using AutofacAndComposition.Model;
+﻿using AutofacAndComposition.App.Client;
+using AutofacAndComposition.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.App.Services
 {
-    public interface ICreateOrderService<TVenue>
-        where TVenue : Venue
+    public interface ICreateOrderService
     {
-        void CreateOrders();
+        void CreateOrder(OrderRequest request);
     }
 }

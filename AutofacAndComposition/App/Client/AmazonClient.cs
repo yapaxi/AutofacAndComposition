@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutofacAndComposition.App.DomainModel;
+using AutofacAndComposition.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +10,41 @@ namespace AutofacAndComposition.App.Client
 {
     public class AmazonClient : IClient
     {
-        private readonly Token _token;
+        private readonly Credential _credential;
 
-        public AmazonClient(Token token)
+        public AmazonClient(Credential credential)
         {
-            _token = token ?? throw new ArgumentNullException(nameof(token));
+            _credential = credential ?? throw new ArgumentNullException(nameof(credential));
+        }
+        
+        public OrderRequest[] GetOrders()
+        {
+            switch (_credential.SellingVenueId)
+            {
+                case Amazon.USASellingVenueId:
+                    return new[]
+                    {
+                        new OrderRequest() { VenueOrderId = "1"  },
+                        new OrderRequest() { VenueOrderId = "2"   },
+                        new OrderRequest() { VenueOrderId = "3"   },
+                        new OrderRequest() { VenueOrderId = "4"   },
+                        new OrderRequest() { VenueOrderId = "5"   },
+                        new OrderRequest() { VenueOrderId = "6"   },
+                        new OrderRequest() { VenueOrderId = "7"   },
+                    };
+                case Amazon.CanadaSellingVenueId:
+                    return new[]
+                    {
+                        new OrderRequest() { VenueOrderId = "1"   },
+                        new OrderRequest() { VenueOrderId = "2"   },
+                        new OrderRequest() { VenueOrderId = "3"   },
+                        new OrderRequest() { VenueOrderId = "4"   },
+                    };
+            }
+
+            throw new InvalidOperationException();
         }
 
-        public string TokenValue => _token.TokenValue;
-
-        public object[] GetOrders()
-        {
-            return new object[] { 1, 2, 3, 4 };
-        }
+        public override string ToString() => $"{nameof(AmazonClient)} over token {_credential.Token}";
     }
 }

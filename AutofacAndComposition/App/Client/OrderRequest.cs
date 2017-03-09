@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.App.Client
 {
-    public class Token
+    public class OrderRequest
     {
-        public Token(string value)
-        {
-            TokenValue = value;
-        }
+        public string VenueOrderId { get; set; }
 
-        public string TokenValue { get; }
+        public override string ToString() => VenueOrderId;
     }
 }

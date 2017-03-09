@@ -1,4 +1,6 @@
 ﻿using AutofacAndComposition.App.Client;
+using AutofacAndComposition.App.DomainModel;
+using AutofacAndComposition.App.Repositories;
 using AutofacAndComposition.Model;
 using System;
 using System.Collections.Generic;
@@ -8,23 +10,31 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.App.Services
 {
-    public class CreateOrderService<TVenue, TClient> : ICreateOrderService<TVenue>
-        where TClient : IClient
-        where TVenue : Venue
+    public class CreateOrderService : ICreateOrderService
     {
-        private readonly TVenue _venue;
-        private readonly TClient _client;
+        private readonly OrderRepository _repository;
+        private readonly Venue _venue;
 
-        public CreateOrderService(TVenue venue, TClient client)
+        public CreateOrderService(Venue venue, OrderRepository repository)
         {
+            _repository = repository;
             _venue = venue;
-            _client = client;
         }
 
-        public void CreateOrders() => SaveOrders(ProcessOrders(_client.GetOrders()));
+        public void CreateOrder(OrderRequest request)
+        {
+            var exists = _repository.Orders.Where(e => e.SellingVenueId == _venue.Id && e.VenueOrderId == request.VenueOrderId).Any();
 
-        private object[] ProcessOrders(object[] orders) => orders;
+            if (exists)
+            {
+                Console.WriteLine($"[{_venue.Id}] Order request \"{request}\" is already processed");
+                return;
+            }
 
-        private void SaveOrders(object[] processedOrders) => processedOrders.ToList().ForEach(e => Console.WriteLine($"{_venue.Id} via token {_client.TokenValue} processes order {e}"));
+            var order = new Order() { SellingVenueId = _venue.Id, VenueOrderId = request.VenueOrderId };
+            _repository.AddOrder(order);
+
+            Console.WriteLine($"+++ [{_venue.Id}] Created order \"{order}\"");
+        }
     }
 }

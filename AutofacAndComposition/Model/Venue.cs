@@ -8,13 +8,24 @@ namespace AutofacAndComposition.Model
 {
     // abstract
 
-    public abstract class Venue { public abstract int Id { get; } }
+    public class Venue
+    {
+        public Venue (int id)
+        {
+            Id = id;
+        }
 
-    public abstract class Amazon : Venue { }
+        public int Id { get; }
+    }
     
-    // concrect
-    
-    public class AmazonX : Amazon { public override int Id { get; } = 101; }
+    public abstract class Vendor
+    {
 
-    public class AmazonY : Amazon { public override int Id { get; } = 102; }
+    }
+
+    public class Amazon : Vendor
+    {
+        public const int USASellingVenueId = 101;
+        public const int CanadaSellingVenueId = 102;
+    }
 }

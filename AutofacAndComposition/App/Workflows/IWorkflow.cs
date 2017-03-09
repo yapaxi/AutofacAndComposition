@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutofacAndComposition.App.Client
+namespace AutofacAndComposition.App.Workflows
 {
-    public interface IClient
+    public interface IWorkflow
     {
-        OrderRequest[] GetOrders();
+        void Run();
     }
 }
