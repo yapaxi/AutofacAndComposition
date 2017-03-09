@@ -34,10 +34,10 @@ namespace AutofacAndComposition
             {
                 var scheduler = new StdSchedulerFactory().GetScheduler();
                 scheduler.JobFactory = new QuartzJobFactory(rootScope);
+                scheduler.Start();
 
                 ScheduleVendor<Amazon>(scheduler, rootScope);
 
-                scheduler.Start();
                 Console.WriteLine("All done. Running.");
                 Process.GetCurrentProcess().WaitForExit();
             }
