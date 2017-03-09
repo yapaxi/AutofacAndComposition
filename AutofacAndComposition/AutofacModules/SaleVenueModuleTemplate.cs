@@ -15,13 +15,18 @@ namespace AutofacAndComposition.AutofacModules
     public abstract class SaleVendorModuleTemplate<TVendor> : Module
         where TVendor : Vendor
     {
-        protected abstract Type CreateOrderJob { get; }
+        protected abstract WorkflowJobConfig CreateOrderJob { get; }
         
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(new WorkflowJobConfig(CreateOrderJob)).Named<WorkflowJobConfig>(typeof(TVendor).Name);
-            RecursiveRegister(builder, CreateOrderJob);
+            Register(builder, CreateOrderJob);
             base.Load(builder);
+        }
+
+        protected void Register(ContainerBuilder builder, WorkflowJobConfig config)
+        {
+            builder.RegisterInstance(config).Named<WorkflowJobConfig>(typeof(TVendor).Name);
+            RecursiveRegister(builder, config.JobType);
         }
 
         private void RecursiveRegister(ContainerBuilder builder, Type type)

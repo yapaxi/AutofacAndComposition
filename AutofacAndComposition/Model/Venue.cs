@@ -16,6 +16,8 @@ namespace AutofacAndComposition.Model
         }
 
         public int Id { get; }
+
+        public override string ToString() => $"Venue-{Id}";
     }
     
     public abstract class Vendor

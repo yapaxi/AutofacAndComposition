@@ -24,6 +24,7 @@ namespace AutofacAndComposition
         {
             var builder = new ContainerBuilder();
 
+            builder.RegisterModule(new R1Module());
             builder.RegisterModule(new DataAccessModule());
             builder.RegisterModule(new AmazonModule());
 
@@ -52,13 +53,27 @@ namespace AutofacAndComposition
             
             foreach (var jobConfig in scope.ResolveNamed<IEnumerable<WorkflowJobConfig>>(vendorName))
             {
-                Console.WriteLine($"[{vendorName}] Configuring job {jobConfig.JobType.Name}");
+                Console.WriteLine($"  [{vendorName}] Configuring {GetWorkflowName(jobConfig.JobType)} ");
 
-                var configurations = vendorConfigurationService.GetConfigurations<TVendor>();
+                VendorConfiguration[] configurations;
+
+                switch (jobConfig)
+                {
+                    case VenueWorkflowJobConfig vconf:
+                        Console.WriteLine($"    [{vendorName}] Workflow {GetWorkflowName(jobConfig.JobType)} is restricted to venue {vconf.Venue}");
+                        configurations = vendorConfigurationService.GetConfigurations<TVendor>(vconf.Venue);
+                        break;
+                    case WorkflowJobConfig conf:
+                        Console.WriteLine($"    [{vendorName}] Workflow {GetWorkflowName(jobConfig.JobType)} is not restricted to venue");
+                        configurations = vendorConfigurationService.GetConfigurations<TVendor>();
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
 
                 foreach (var configuration in configurations)
                 {
-                    Console.WriteLine($"[{vendorName}] Configuring job {jobConfig.JobType.Name} venue instance: id={configuration.Venue.Id};credential={configuration.Credential.Token}");
+                    Console.WriteLine($"        [{vendorName}] Configuring workflow {GetWorkflowName(jobConfig.JobType)} venue instance: id={configuration.Venue.Id};credential={configuration.Credential.Token}");
 
                     ScheduleJob(scheduler, jobConfig, configuration);
                 }
@@ -77,11 +92,37 @@ namespace AutofacAndComposition
             var trigger = TriggerBuilder.Create()
                 .StartNow()
                 .WithSimpleSchedule(schedule => schedule
-                    .WithIntervalInSeconds(5)
+                    .WithIntervalInSeconds(60)
                     .RepeatForever())
                 .Build();
 
             scheduler.ScheduleJob(job, trigger);
+        }
+
+        private static string GetWorkflowName(Type type)
+        {
+            return type.IsGenericType ? FriendlyTypeName(type.GetGenericArguments()[0]) : throw new InvalidOperationException();
+        }
+
+        private static string FriendlyTypeName(Type t)
+        {
+            if (t.IsGenericTypeDefinition)
+                throw new InvalidOperationException();
+
+            if (!t.IsGenericType)
+            {
+                return t.Name;
+            }
+            var b = new StringBuilder();
+            b.Append(t.Name).Append("[");
+            foreach (var v in t.GetGenericArguments())
+            {
+                var name = FriendlyTypeName(v);
+                b.Append(name).Append(", ");
+            }
+            b.Length -= 2;
+            b.Append("]");
+            return b.ToString();
         }
     }
 

@@ -26,5 +26,14 @@ namespace AutofacAndComposition.App.Services
             
             return credentials.Select(e => new VendorConfiguration(new Venue(e.SellingVenueId), e)).ToArray();
         }
+
+        public VendorConfiguration[] GetConfigurations<TVendor>(Venue venue)
+            where TVendor : Vendor
+        {
+            var vendorCode = typeof(TVendor).Name;
+            var credentials = _repository.Credentials.Where(e => e.VendorCode == vendorCode && e.SellingVenueId == venue.Id).ToArray();
+
+            return credentials.Select(e => new VendorConfiguration(new Venue(e.SellingVenueId), e)).ToArray();
+        }
     }
 }
