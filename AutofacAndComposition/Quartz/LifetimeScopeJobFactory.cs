@@ -35,13 +35,16 @@ namespace AutofacAndComposition.Quartz
                     throw new ArgumentNullException(nameof(bundle));
                 }
 
-                var config = (VendorConfiguration)bundle.JobDetail.JobDataMap["Config"];
-                scope = _container.BeginLifetimeScope(builder =>
+                var lateDependency = bundle.JobDetail.JobDataMap.TryGetLateDependencyBundle();
+                if (lateDependency != null)
                 {
-                    builder.RegisterInstance(config.Venue).As<Venue>().SingleInstance();
-                    builder.RegisterInstance(config.Credential).As<Credential>().SingleInstance();
-                });
-
+                    scope = _container.BeginLifetimeScope(builder => lateDependency.Register(builder));
+                }
+                else
+                {
+                    scope = _container.BeginLifetimeScope();
+                }
+                
                 job = (IJob)scope.Resolve(bundle.JobDetail.JobType);
 
                 lock (_lock)

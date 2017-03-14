@@ -74,6 +74,7 @@
     <Compile Include="App\Workflows\CreateOrderWorkflow.cs" />
     <Compile Include="AutofacModules\DataAccessModule.cs" />
     <Compile Include="AutofacModules\R1Module.cs" />
+    <Compile Include="Model\IAutofacLateDependencyBundle.cs" />
     <Compile Include="Model\VendorConfiguration.cs" />
     <Compile Include="Model\Venue.cs" />
     <Compile Include="AutofacModules\AmazonModule.cs" />

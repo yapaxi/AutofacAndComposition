@@ -23,18 +23,20 @@ namespace AutofacAndComposition
     {
         static void Main(string[] args)
         {
+            var rootScopeTag = "New Root";
             var builder = new ContainerBuilder();
 
             builder.RegisterModule(new R1Module());
             builder.RegisterModule(new DataAccessModule());
             builder.RegisterModule(new AmazonModule());
-
+            builder.RegisterType<LifetimeScopeJobFactory>().As<IJobFactory>().InstancePerMatchingLifetimeScope(rootScopeTag);
+            
             var container = builder.Build();
 
-            using (var rootScope = container.BeginLifetimeScope("New Root"))
+            using (var rootScope = container.BeginLifetimeScope(rootScopeTag))
             {
                 var scheduler = new StdSchedulerFactory().GetScheduler();
-                scheduler.JobFactory = new LifetimeScopeJobFactory(rootScope);
+                scheduler.JobFactory = rootScope.Resolve<IJobFactory>();
                 scheduler.Start();
 
                 ScheduleVendor<Amazon>(scheduler, rootScope);
@@ -83,11 +85,12 @@ namespace AutofacAndComposition
 
         private static void ScheduleJob(IScheduler scheduler, WorkflowJobConfig jobConfig, VendorConfiguration configuration)
         {
-            IDictionary<string, object> dict = new Dictionary<string, object>() { { "Config", configuration } };
+            var map = new JobDataMap();
+            map.SetLateDependencyBundle(configuration);
 
             var job = JobBuilder
                 .Create(jobConfig.JobType)
-                .SetJobData(new JobDataMap(dict))
+                .SetJobData(map)
                 .Build();
 
             var trigger = TriggerBuilder.Create()
