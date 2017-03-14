@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.App.Client
 {
-    public class R1Client
+    public class SomeMicroserviceClient
     {
         private readonly object _lock = new object();
         private readonly HashSet<string> _orders = new HashSet<string>();
 
-        public void CreateOrder(Order order)
+        public void PushOrder(Order order)
         {
             lock (_lock)
             {
                 if (!_orders.Contains(order.VenueOrderId))
                 {
                     _orders.Add(order.VenueOrderId);
-                    Console.WriteLine($"Created order \"{order.VenueOrderId}\" in R1");
+                    Console.WriteLine($"[{nameof(SomeMicroserviceClient)}] Pusing order \"{order.VenueOrderId}\" somewhere...");
                 }
                 else
                 {
-                    Console.WriteLine($"Order \"{order.VenueOrderId}\" is already created in R1");
+                    Console.WriteLine($"[{nameof(SomeMicroserviceClient)}] Order \"{order.VenueOrderId}\" is already pushed somewhere...");
                 }
             }
         }

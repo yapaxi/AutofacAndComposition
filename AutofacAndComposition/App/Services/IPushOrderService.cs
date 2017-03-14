@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.App.Services
 {
-    public interface IR1CreateOrderService
+    public interface IPushOrderService
     {
-        void CreateOrder(Order order);
+        void PushOrder(Order order);
     }
 }

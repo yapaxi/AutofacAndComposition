@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.AutofacModules
 {
-    public class R1Module : Module
+    public class SomeMicroserviceModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<R1Client>().SingleInstance();
+            builder.RegisterType<SomeMicroserviceClient>().SingleInstance();
             base.Load(builder);
         }
     }

@@ -60,9 +60,9 @@
     <Compile Include="App\Client\AmazonClient.cs" />
     <Compile Include="App\Client\IClient.cs" />
     <Compile Include="App\Client\OrderRequest.cs" />
-    <Compile Include="App\Client\R1Client.cs" />
-    <Compile Include="App\Services\R1CreateOrderService.cs" />
-    <Compile Include="App\Services\IR1CreateOrderService.cs" />
+    <Compile Include="App\Client\SomeMicroserviceClient.cs" />
+    <Compile Include="App\Services\PushOrderService.cs" />
+    <Compile Include="App\Services\IPushOrderService.cs" />
     <Compile Include="App\Services\ICreateOrderService.cs" />
     <Compile Include="App\Services\VendorConfigurationService.cs" />
     <Compile Include="App\DomainModel\Credential.cs" />
@@ -70,10 +70,10 @@
     <Compile Include="App\Repositories\ConfigurationRepository.cs" />
     <Compile Include="App\Repositories\OrderRepository.cs" />
     <Compile Include="App\Services\CreateOrderService.cs" />
-    <Compile Include="App\Workflows\R1CreateOrderWorkflow.cs" />
+    <Compile Include="App\Workflows\PushOrderWorkflow.cs" />
     <Compile Include="App\Workflows\CreateOrderWorkflow.cs" />
     <Compile Include="AutofacModules\DataAccessModule.cs" />
-    <Compile Include="AutofacModules\R1Module.cs" />
+    <Compile Include="AutofacModules\SomeMicroserviceModule.cs" />
     <Compile Include="Model\IAutofacLateDependencyBundle.cs" />
     <Compile Include="Model\VendorConfiguration.cs" />
     <Compile Include="Model\Venue.cs" />

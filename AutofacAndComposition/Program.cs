@@ -26,7 +26,7 @@ namespace AutofacAndComposition
             var rootScopeTag = "New Root";
             var builder = new ContainerBuilder();
 
-            builder.RegisterModule(new R1Module());
+            builder.RegisterModule(new SomeMicroserviceModule());
             builder.RegisterModule(new DataAccessModule());
             builder.RegisterModule(new AmazonModule());
             builder.RegisterType<LifetimeScopeJobFactory>().As<IJobFactory>().InstancePerMatchingLifetimeScope(rootScopeTag);

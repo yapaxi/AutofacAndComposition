@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace AutofacAndComposition.App.Workflows
 {
-    public class R1CreateOrderWorkflow<TR1CreateOrderService> : IWorkflow
-        where TR1CreateOrderService : IR1CreateOrderService
+    public class PushOrderWorkflow<TPushOrderService> : IWorkflow
+        where TPushOrderService : IPushOrderService
     {
-        private readonly TR1CreateOrderService _orderCreator;
+        private readonly TPushOrderService _orderCreator;
         private readonly Venue _venue;
         private readonly OrderRepository _repository;
 
-        public R1CreateOrderWorkflow(Venue venue, TR1CreateOrderService orderCreator, OrderRepository repository)
+        public PushOrderWorkflow(Venue venue, TPushOrderService orderCreator, OrderRepository repository)
         {
             _orderCreator = orderCreator;
             _venue = venue;
@@ -32,8 +32,8 @@ namespace AutofacAndComposition.App.Workflows
             {
                 try
                 {
-                    Console.WriteLine($"[{_venue.Id}] Sending order \"{order}\" to R1");
-                    _orderCreator.CreateOrder(order);
+                    Console.WriteLine($"[{_venue.Id}] Pusing order \"{order}\" somewhere...");
+                    _orderCreator.PushOrder(order);
                 }
                 catch (Exception e)
                 {

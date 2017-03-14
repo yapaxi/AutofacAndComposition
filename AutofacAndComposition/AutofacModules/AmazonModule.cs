@@ -19,26 +19,26 @@ namespace AutofacAndComposition.AutofacModules
                                                 CreateOrderWorkflow<
                                                     CreateOrderService>>));
 
-        private VenueWorkflowJobConfig R1CreateOrderJobUSA
+        private VenueWorkflowJobConfig PushOrderJobUSA
             => new VenueWorkflowJobConfig(
                 venue: new Venue(Amazon.USASellingVenueId),
                 jobType: typeof(WorkflowJob<
-                                    R1CreateOrderWorkflow<
-                                        R1CreateOrderServiceUSA>>));
+                                    PushOrderWorkflow<
+                                        PushOrderServiceUSA>>));
 
-        private VenueWorkflowJobConfig R1CreateOrderJobCanada
+        private VenueWorkflowJobConfig PushOrderJobCanada
             => new VenueWorkflowJobConfig(
                 venue: new Venue(Amazon.CanadaSellingVenueId),
                 jobType: typeof(WorkflowJob<
-                                    R1CreateOrderWorkflow<
-                                        R1CreateOrderServiceCanada>>));
+                                    PushOrderWorkflow<
+                                        PushOrderServiceCanada>>));
 
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<AmazonClient>();
 
-            Register(builder, R1CreateOrderJobUSA);
-            Register(builder, R1CreateOrderJobCanada);
+            Register(builder, PushOrderJobUSA);
+            Register(builder, PushOrderJobCanada);
 
             base.Load(builder);
         }
